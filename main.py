@@ -5,9 +5,10 @@ from model.chatgpt_prompting import generate_sentence
 from model.summary_dialogue_prompt import summary_dialogue
 from model.recommend_check_prompt import recommend_check
 from tts_model.google_tts import synthesize_speech_base64
-
+from prometheus_fastapi_instrumentator import Instrumentator # 모니터링
 
 app = FastAPI()
+Instrumentator().instrument(app).expose(app) #모니터링
 
 # 캐시 딕셔너리
 cache = {}  # {"room_number": ["문장1", "문장2"]}

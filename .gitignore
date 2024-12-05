@@ -4,3 +4,4 @@
 __pycache__
 myenv
 stt-test-key.json
+.env.test
