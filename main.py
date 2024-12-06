@@ -6,6 +6,7 @@ from model.summary_dialogue_prompt import summary_dialogue
 from model.recommend_check_prompt import recommend_check
 from tts_model.google_tts import synthesize_speech_base64
 from prometheus_fastapi_instrumentator import Instrumentator # 모니터링
+from typing import Optional
 
 app = FastAPI()
 Instrumentator().instrument(app).expose(app) #모니터링
@@ -17,7 +18,7 @@ total_conversation_cache = {}  # {"room_number": ["전체 문장1", "전체 문�
 # 문장 데이터를 위한 Pydantic 모델 정의
 class DialogueRequest(BaseModel):
     room_number: str
-    sentence: str
+    sentence: Optional[str] = None  # 기본값 None으로 설정
 
 # TTS 요청 바디 스키마 정의
 class TTSRequest(BaseModel):
@@ -46,8 +47,16 @@ def add_sentence_to_cache(room_number: str, sentence: str):
 
 @app.post("/recommendations")
 async def get_recommendations(request: DialogueRequest):
-    sentence = request.sentence.strip()
+    sentence = request.sentence.strip() if request.sentence else ""
     room_number = request.room_number
+
+    if not sentence:  # sentence가 None이거나 비어 있을 경우
+        return {
+            "room_number": room_number,
+            "sentence": "",
+            "is_recommend": False,
+            "recommendations": []
+        }
 
     try:
         # 문장 캐시에 추가
@@ -116,6 +125,6 @@ async def synthesize_tts(request: TTSRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
     
-# if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8080)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8080)
