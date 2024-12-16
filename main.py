@@ -19,6 +19,10 @@ total_conversation_cache = {}  # {"room_number": ["전체 문장1", "전체 문�
 class DialogueRequest(BaseModel):
     room_number: str
     sentence: Optional[str] = None  # 기본값 None으로 설정
+    
+class SummaryRequest(BaseModel):
+    room_number: str
+    sentence: Optional[str] = None  # 기본값 None으로 설정
 
 # TTS 요청 바디 스키마 정의
 class TTSRequest(BaseModel):
@@ -97,21 +101,29 @@ async def get_recommendations(request: DialogueRequest):
         raise HTTPException(status_code=500, detail=f"Error checking recommendation: {str(e)}")
 
 @app.post("/summary")
-async def summarize_dialogue(request: DialogueRequest):
+async def summarize_dialogue(request: SummaryRequest):
     dialogue_content = request.sentence.strip()
 
+    # 입력값이 공백인 경우 처리
     if not dialogue_content:
-        raise HTTPException(status_code=400, detail="Dialogue content cannot be empty.")
+        return {
+            "summary": [],
+            "todo": []
+        }
 
     summary_result = summary_dialogue(dialogue_content)
 
     if summary_result is None:
-        raise HTTPException(status_code=500, detail="Failed to summarize dialogue.")
-    
+        return {
+            "summary": [],
+            "todo": []
+        }
+
     return {
         "summary": summary_result['summary'],
         "todo": summary_result['todo']
     }
+
 
 # Text-to-Speech API 엔드포인트
 @app.post("/tts")
