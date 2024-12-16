@@ -14,10 +14,10 @@ def synthesize_speech_base64(voice_type: str, text: str) -> str:
 
     # 목소리 매핑 설정
     voice_map = {
-        "female1": {"language_code": "en-AU", "name": "en-AU-Journey-O"},
-        "female2": {"language_code": "en-AU", "name": "en-AU-Journey-F"},
-        "male1": {"language_code": "en-AU", "name": "en-AU-Journey-D"},
-        "male2": {"language_code": "en-GB", "name": "en-GB-Journey-D"},
+        "female1": {"language_code": "ko-KR", "name": "ko-KR-Standard-A"},
+        "female2": {"language_code": "ko-KR", "name": "ko-KR-Standard-B"},
+        "male1": {"language_code": "ko-KR", "name": "ko-KR-Standard-C"},
+        "male2": {"language_code": "ko-KR", "name": "ko-KR-Standard-D"},
     }
 
     if voice_type not in voice_map:
