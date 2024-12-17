@@ -1,5 +1,6 @@
 from typing import Literal
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from model.chatgpt_prompting import generate_sentence
 from model.summary_dialogue_prompt import summary_dialogue
@@ -9,6 +10,16 @@ from prometheus_fastapi_instrumentator import Instrumentator # 모니터링
 from typing import Optional
 
 app = FastAPI()
+
+# CORS 설정 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # 프론트엔드 Origin만 허용
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 Instrumentator().instrument(app).expose(app) #모니터링
 
 # 캐시 딕셔너리
