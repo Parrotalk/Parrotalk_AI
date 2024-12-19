@@ -14,7 +14,6 @@ template_string = """
 작업: 다음은 상대방의 문장이다. 다음문장에 대하여 답변가능여부를 판단하세요.
 
 답변가능한 문장이면 True를 반환
-대화초반 '안녕하세요' 기본적인 인사만 있을때는 답장할 필요할 없다고 판단하여 False 반환, 그 외 다른 말과 함께 대화할 경우 True 반환
 
 check_sentence: True/False
 excuse: 이유
