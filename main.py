@@ -88,17 +88,36 @@ async def get_recommendations(request: DialogueRequest):
             # 추천 가능하면 캐시를 비우고 결과 반환
             cache[room_number].clear()
 
-            # 추천 실행 (전체 누적 문장 활용)
-            result = generate_sentence(total_combined_text)
+            # 추천 실행 (전체 누적 문장 및 최신 문장 활용)
+            result = generate_sentence(total_combined_text, sentence)
+            # 반환값 정규화
+            if '응답' in result:
+                if isinstance(result['응답'], dict):
+                    recommendations = [
+                        result['응답'].get('추천 문장 1', ""),
+                        result['응답'].get('추천 문장 2', ""),
+                        result['응답'].get('추천 문장 3', "")
+                    ]
+                elif isinstance(result['응답'], list):
+                    recommendations = [
+                        result['응답'][0].get('추천 문장 1', ""),
+                        result['응답'][0].get('추천 문장 2', ""),
+                        result['응답'][0].get('추천 문장 3', "")
+                    ]
+                else:
+                    recommendations = []
+            else:
+                recommendations = [
+                    result.get('추천 문장 1', ""),
+                    result.get('추천 문장 2', ""),
+                    result.get('추천 문장 3', "")
+                ]
+
             return {
                 "room_number": room_number,
                 "sentence": total_combined_text,
                 "is_recommend": True,
-                "recommendations": [
-                    result.get('추천 문장 1', []),
-                    result.get('추천 문장 2', []),
-                    result.get('추천 문장 3', [])
-                ]
+                "recommendations": recommendations
             }
         else:
             # 추천 불가능하면 결합된 문장만 반환
