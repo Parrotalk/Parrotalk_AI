@@ -10,20 +10,29 @@ load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # 템플릿 문자열 정의
-template_string = """
-작업: 대화하는 상황에서 문맥을 파악하여 문장단위 기준 맨 마지막 문장에 대한 답변하는 문장 3개를 반환해라.
+template_string = """ 
+작업: 대화 상대방의 발화 기록과 다음 문장을 참고하여 당신이 고객이나 친구 입장이 되어, 자연스럽고 상황에 적합한 답변을 3개 생성해라. 
+문장: {sentence} 
+대화 기록: {total_combined_text}
 
+[조건]
+1. 상대방의 말투(존댓말/반말)에 따라 답변 말투를 일치시켜라.
+2. 예/아니오로 답변할 수 있는 질문에는 다양한 응답 옵션을 제시하라.
+3. '안녕하세요'와 같은 기본적인 인사말만 포함된 문장은 답변하지 않고 빈칸을 반환하라.
+4. 상대방의 질문이나 요청을 이해하고 이에 적절한 답변을 하도록 하라.
+5. 답변은 간결하면서도 대화의 맥락을 고려하여 의미 있게 작성하라.
+
+[답변 형식]
 추천 문장 1: 첫번째 문장
-추천 문장 2: 두번쨰 문장
+추천 문장 2: 두번째 문장
 추천 문장 3: 세번째 문장
-
-
-대화 내용: {text}
 """
-
-def generate_sentence(dialogue_content):
-    # 템플릿 문자열을 대화 내용으로 완성
-    prompt = template_string.format(text=dialogue_content)
+def generate_sentence(total_combined_text, sentence):
+    # 템플릿 문자열을 상황에 맞게 완성
+    prompt = template_string.format(
+        total_combined_text=total_combined_text,
+        sentence=sentence
+    )
 
     try:
         client = OpenAI(

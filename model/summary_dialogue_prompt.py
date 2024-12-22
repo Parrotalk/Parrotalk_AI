@@ -13,6 +13,7 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 template_string = """
 작업: 두명이 대화한 다음 대화록을 요약하고 대화록에 나온 '나'가 해야할 해야할일을 리스트화 해라
 대화내용이 아무것도 없거나 요약이 불필요할 경우 summary는 빈배열을 반환
+todo 해야할일 목록을 추출할때에는 중복되지 않도록 추출하여라
 
 summary: 요약문
 todo: 해야할일 목록
