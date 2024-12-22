@@ -115,7 +115,7 @@ async def get_recommendations(request: DialogueRequest):
 
             return {
                 "room_number": room_number,
-                "sentence": total_combined_text,
+                "sentence": sentence,
                 "is_recommend": True,
                 "recommendations": recommendations
             }
