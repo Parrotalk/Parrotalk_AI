@@ -21,6 +21,7 @@ template_string = """
 3. '안녕하세요'와 같은 기본적인 인사말만 포함된 문장은 답변하지 않고 빈칸을 반환하라.
 4. 상대방의 질문이나 요청을 이해하고 이에 적절한 답변을 하도록 하라.
 5. 답변은 간결하면서도 대화의 맥락을 고려하여 의미 있게 작성하라.
+6. 사람이 처럼 답변
 
 [답변 형식]
 추천 문장 1: 첫번째 문장
@@ -43,7 +44,7 @@ def generate_sentence(total_combined_text, sentence):
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant. Response in json format"},
+                {"role": "system", "content": "You are a helpful human. Response in json format"},
                 {"role": "user", "content": prompt}
             ],
             # response_format 지정하기
